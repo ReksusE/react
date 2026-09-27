@@ -1,0 +1,341 @@
+@use '/src/styles/helpers' as *;
+
+.header {
+  padding-bottom: 50px;
+
+  @include mobile {
+    padding-bottom: 25px;
+  }
+
+  &__body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 50px;
+
+    @include laptop {
+      gap: 31px;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    @include mobile {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      justify-content: center;
+      align-items: center;
+      row-gap: 3rem;
+      padding: 1rem;
+      background-color: var(--color-dark);
+
+      &:not(.is-active) {
+        @include hide;
+
+        translate: 100%;
+      }
+    }
+  }
+
+  &__menu {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    @include mobile {
+      flex-grow: 0;
+    }
+
+    &-list {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+
+      @include tablet {
+        gap: 15px;
+      }
+
+      @include mobile {
+        flex-direction: column;
+        row-gap: 1rem;
+      }
+
+      &__icon {
+        width: 23px !important;
+        height: 23px !important;
+      }
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      &-push {
+        margin-left: auto;
+
+        @include mobile {
+          margin: 0;
+        }
+      }
+    }
+
+    &-link {
+      &-accent {
+        font-weight: 300;
+
+        @include fluid-text(17, 12);
+
+        color: var(--color-accent-05);
+
+        &:hover {
+          color: var(--color-light);
+        }
+
+        &.is-active {
+          color: var(--color-light);
+          pointer-events: none;
+        }
+      }
+
+      &-bold {
+        font-weight: 400;
+
+        @include fluid-text(16, 12);
+      }
+    }
+  }
+
+  &__side {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    @include tablet {
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    @include mobile {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+      margin-left: auto;
+    }
+  }
+
+  &__socials {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    @include mobile-above {
+      @include visually-hidden;
+    }
+
+    @include mobile {
+      flex-direction: row;
+      gap: 65px;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 8px 0;
+
+    @include tablet {
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    @include mobile {
+      flex-direction: row;
+      gap: 30px;
+    }
+  }
+
+  &__lang-toggle,
+  &__theme-toggle,
+  &__user-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    color: var(--color-light);
+    background: none;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+      color var(--transition-duration),
+      background var(--transition-duration);
+
+    @include hover {
+      color: var(--color-accent-05);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    @include mobile {
+      padding: 8px;
+    }
+  }
+
+  &__theme-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    color: var(--color-light);
+    background: none;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition:
+      color var(--transition-duration),
+      background var(--transition-duration);
+
+    @include hover {
+      color: var(--color-accent-05);
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  &__user {
+    &-wrapper {
+      position: relative;
+    }
+
+    &-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+      color: var(--color-light);
+      background: none;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all var(--transition-duration);
+
+      @include hover {
+        color: var(--color-accent-05);
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    &-panel {
+      position: absolute;
+      z-index: 300;
+      top: calc(100% + 16px);
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 280px;
+      padding: 16px;
+      background: var(--color-dark);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(10px) scale(0.98);
+
+      @include hide;
+
+      &.is-active {
+        @include show;
+
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    &-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 4px 0 8px;
+    }
+
+    &-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-light);
+    }
+
+    &-email {
+      overflow: hidden;
+      font-size: 11px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: var(--color-gray);
+    }
+  }
+
+  &__panel-divider {
+    height: 1px;
+    margin: 4px 0;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &__panel-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    text-decoration: none;
+    color: var(--color-light);
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background var(--transition-duration);
+
+    svg {
+      width: 16px;
+      height: 16px;
+      opacity: 0.7;
+      transition: opacity var(--transition-duration);
+    }
+
+    @include hover {
+      background: rgba(255, 255, 255, 0.05);
+
+      svg {
+        color: var(--color-accent-05);
+        opacity: 1;
+      }
+    }
+
+    &--logout {
+      color: var(--color-gray);
+
+      @include hover {
+        color: var(--color-red);
+      }
+    }
+  }
+}
+
+.icon-moon,
+.icon-sun {
+  display: none;
+  width: 24px;
+  height: 24px;
+}
+
+html:not(.light-theme) .icon-moon {
+  display: block;
+}
+
+html.light-theme .icon-sun {
+  display: block;
+}

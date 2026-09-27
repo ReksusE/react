@@ -1,0 +1,15 @@
+.button {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-red);
+  background: #1b1b1a;
+  border: none;
+  box-shadow: var(--border-shadow);
+
+  @include fluid-text(20, 16);
+
+  &:hover {
+    color: var(--color-light);
+    scale: 1.01;
+  }
+}

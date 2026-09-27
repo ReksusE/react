@@ -1,0 +1,58 @@
+.footer {
+  padding-block: rem(50);
+
+  @include tablet {
+    padding-block: rem(25);
+  }
+
+  &__menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: rem(180);
+
+    @include mobile {
+      flex-direction: column;
+      gap: rem(50);
+    }
+
+    &-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: rem(40);
+
+      &:first-child {
+        @include mobile {
+          flex-direction: row;
+        }
+      }
+
+      @include mobile {
+        flex: none;
+        gap: rem(20);
+        width: 100%;
+      }
+    }
+
+    &-title {
+      font-size: rem(14);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      row-gap: rem(14);
+      font-weight: 300;
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: rem(24);
+      font-size: rem(16);
+    }
+  }
+}

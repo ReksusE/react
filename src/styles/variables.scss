@@ -1,0 +1,56 @@
+@use 'helpers' as *;
+
+:root {
+  --color-light: #ffffff;
+
+  --color-dark: #1a1a18;
+  --color-dark-alt: #000000;
+
+  --color-accent-05: #f07c00;
+  --color-accent-10: #c06402;
+  --color-accent: #fb8d28;
+  --color-accent-alt: #ee7f00;
+
+  --color-red: #a40606;
+
+  --color-gray: #939393;
+  --color-gray-alt: #858585;
+
+  --font-family-base: 'HelveticaNeueCyr', sans-serif;
+  --font-family-accent: 'Roboto', sans-serif;
+  --font-family-alt: 'OpenSans', sans-serif;
+
+  --container-width: #{1270px};
+  --container-padding-x: #{30px};
+
+  --transition-duration: 0.2s;
+
+  --border-shadow:
+    1px 1px 2px 0 rgba(43, 43, 42, 0.3) inset,
+    -1px -1px 2px 0 rgba(11, 11, 10, 0.5) inset,
+    -7px 7px 14px 0 rgba(11, 11, 10, 0.2),
+    7px -7px 14px 0 rgba(11, 11, 10, 0.2),
+    -7px -7px 14px 0 rgba(43, 43, 42, 0.9), 7px 7px 18px 0 rgba(11, 11, 10, 0.9);
+}
+
+html.light-theme {
+  --color-light: #1a1a18;
+
+  --color-dark: #ffffff;
+  --color-dark-alt: #f5f5f5;
+
+  --color-accent-05: #0074f0;
+  --color-accent-10: #025ec0;
+  --color-accent: #2895fb;
+  --color-accent-alt: #0070f0;
+
+  --color-red: #06a2a2;
+
+  --color-gray: #949494;
+  --color-gray-alt: #858585;
+
+  --border-shadow:
+    1px 1px 2px 0 rgba(0, 0, 0, 0.1) inset,
+    -1px -1px 2px 0 rgba(255, 255, 255, 0.8) inset,
+    -7px 7px 14px 0 rgba(0, 0, 0, 0.05), 7px -7px 14px 0 rgba(0, 0, 0, 0.05);
+}
