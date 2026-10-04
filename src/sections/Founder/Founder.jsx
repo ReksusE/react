@@ -1,4 +1,4 @@
-import './founder.scss'
+import './Founder.scss'
 import Button from '@/components/Button'
 
 export default function Founder() {

@@ -1,35 +1,11 @@
 import './Showrooms.scss'
 import ShowroomCard from '@/components/ShowroomCard'
 import Button from '@/components/Button'
-
-const infoBlocks = [
-  {
-    id: 1,
-    title: 'Часы работы:',
-    lines: ['Пн-Пт: 11:00 - 20:00', 'Сб: 12:00 - 20:00', 'Вс: по согласованию'],
-    i18nTitle: 'showroom-hours',
-    i18nText: 'showroom-hours-val',
-  },
-  {
-    id: 2,
-    title: 'Адрес:',
-    lines: [
-      '105120, г. Москва, ул.',
-      'Сыромятническая Нижняя,',
-      'д.10, стр.12,',
-      '(м.Курская, м.Чкаловская)',
-    ],
-    i18nTitle: 'showroom-address',
-    i18nText: 'showroom-address-val',
-  },
-]
-
-const showroomsLinks = [
-  { id: 1, title: 'открыть схему проезда', href: '#', i18n: 'showroom-scheme' },
-  { id: 2, title: 'дорога от метро', href: '#', i18n: 'showroom-way' },
-]
+import showroomsData from '@/data/showroomsData.json'
 
 export default function Showrooms() {
+  const { infoBlocks, showroomsLinks, cards } = showroomsData
+
   return (
     <section className="showrooms">
       <div className="showrooms__container container">
@@ -49,13 +25,15 @@ export default function Showrooms() {
           </header>
 
           <div className="showrooms__content reveal reveal-delay-2">
-            <ShowroomCard
-              name="шоурум 106"
-              image="src/assets/images/showroom/106.png"
-              alt="шоурум 106"
-              i18n="showroom-106"
-              animation="reveal--fade-left"
-            />
+            {cards[0] && (
+              <ShowroomCard
+                name={cards[0].name}
+                image={cards[0].image}
+                alt={cards[0].alt}
+                i18n={cards[0].i18n}
+                animation={cards[0].animation}
+              />
+            )}
 
             <div className="showrooms__info">
               {infoBlocks.map((block) => (
@@ -75,13 +53,15 @@ export default function Showrooms() {
               ))}
             </div>
 
-            <ShowroomCard
-              name="шоурум 112"
-              image="src/assets/images/showroom/112.png"
-              alt="шоурум 112"
-              i18n="showroom-112"
-              animation="reveal--fade-right"
-            />
+            {cards[1] && (
+              <ShowroomCard
+                name={cards[1].name}
+                image={cards[1].image}
+                alt={cards[1].alt}
+                i18n={cards[1].i18n}
+                animation={cards[1].animation}
+              />
+            )}
           </div>
 
           <div className="showrooms__link reveal">

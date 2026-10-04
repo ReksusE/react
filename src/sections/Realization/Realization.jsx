@@ -1,33 +1,7 @@
 import './Realization.scss'
 import RealizationStep from '@/components/RealizationStep'
 import Button from '@/components/Button'
-
-const stepsData = [
-  {
-    id: 1,
-    number: '1',
-    title: 'Проектирование',
-    text: 'Весь комплекс проектных работ предоставляем в виде альбома, включающего в себя подробные визуализации, монтажные схемы, инженерные системы, разрезы и сметный расчет.',
-    i18nTitle: 'real-step-1-title',
-    i18nText: 'real-step-1-text',
-  },
-  {
-    id: 2,
-    number: '2',
-    title: 'Комплектация под ключ',
-    text: 'В работе используем специализированные материалы для печного строительства от производителей с многолетней репутацией на рынке.',
-    i18nTitle: 'real-step-2-title',
-    i18nText: 'real-step-2-text',
-  },
-  {
-    id: 3,
-    number: '3',
-    title: 'Монтаж',
-    text: 'Быстро и качественно собираем конструкции, всегда находимся на связи и согласовываем каждую деталь с руководителем проекта.',
-    i18nTitle: 'real-step-3-title',
-    i18nText: 'real-step-3-text',
-  },
-]
+import stepsData from '@/data/realizationSteps.json'
 
 export default function Realization() {
   return (
@@ -40,14 +14,14 @@ export default function Realization() {
             на любом этапе строительства
           </h2>
           <div className="realization__list">
-            {stepsData.map((steps, index) => (
+            {stepsData.map((step, index) => (
               <RealizationStep
-                key={steps.id}
-                number={steps.number}
-                title={steps.title}
-                text={steps.text}
-                i18nTitle={steps.i18nTitle}
-                i18nText={steps.i18nText}
+                key={step.id}
+                number={step.number}
+                title={step.title}
+                text={step.text}
+                i18nTitle={step.i18nTitle}
+                i18nText={step.i18nText}
                 delay={index + 1}
               />
             ))}

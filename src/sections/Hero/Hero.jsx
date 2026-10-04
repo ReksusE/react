@@ -1,34 +1,13 @@
 import { useState, useEffect } from 'react'
-import './hero.scss'
-
-const heroSlides = [
-  { id: 1, image: 'src/assets/images/hero/hero__bg.jpg', i18n: 'hero-slide-1' },
-  {
-    id: 2,
-    image: 'src/assets/images/hero/hero__bg2.jpg',
-    i18n: 'hero-slide-2',
-  },
-  {
-    id: 3,
-    image: 'src/assets/images/hero/hero__bg3.jpg',
-    i18n: 'hero-slide-3',
-  },
-  {
-    id: 4,
-    image: 'src/assets/images/hero/hero__bg4.jpg',
-    i18n: 'hero-slide-4',
-  },
-  {
-    id: 5,
-    image: 'src/assets/images/hero/hero__bg5.jpg',
-    i18n: 'hero-slide-5',
-  },
-]
+import './Hero.scss'
+import heroSlides from '@/data/heroSlides.json'
 
 export default function Hero() {
   const [activeSlide, setActiveSlide] = useState(0)
 
   useEffect(() => {
+    if (!heroSlides.length) {return}
+
     const interval = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % heroSlides.length)
     }, 5000)
@@ -44,7 +23,6 @@ export default function Hero() {
     <section className="hero">
       <div className="hero__container container">
         <div className="hero__inner">
-          {/* 🖼 Фоны слайдов */}
           <div className="hero__bg-wrapper">
             {heroSlides.map((slide, index) => (
               <div
@@ -55,7 +33,6 @@ export default function Hero() {
             ))}
           </div>
 
-          {/* 📝 Контент */}
           <div className="hero__content">
             <div className="hero__title-wrapper">
               <h1 className="hero__title">
@@ -82,7 +59,6 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* 🔘 Индикаторы */}
         <div className="hero__indicators">
           {heroSlides.map((_, index) => (
             <span
