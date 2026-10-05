@@ -53,7 +53,7 @@ export default function FilterDropdown({ filterKey, title, i18n, options = [], o
             data-filter-key={filterKey}
             data-filter-value={option.value}
             data-i18n={option.i18n}
-            onClick={() => handleOptionClick(option.value)}
+            onClick={() => handleOptionClick(option.title)}
           >
             {option.title}
           </button>

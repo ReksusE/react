@@ -1,11 +1,10 @@
 import Concepts from '@/sections/Concept'
 import Showroom from '@/sections/Showroom'
+import usePageTitle from '@/hooks/usePageTitle'
 
-export const metadata = {
-  title: 'Concept',
-}
+export default function ConceptsPage() {
+  usePageTitle('Concept')
 
-export default () => {
   return (
     <>
       <Concepts />

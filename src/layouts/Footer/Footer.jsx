@@ -1,6 +1,7 @@
 import './Footer.scss'
 import Icon from '@/components/Icon'
 import Logo from '@/components/Logo'
+import { Link } from 'react-router-dom'
 
 // 📋 Данные для навигации
 const navLinks = [
@@ -98,13 +99,13 @@ export default function Footer() {
             <ul className="footer__menu-list">
               {navLinks.map((link) => (
                 <li key={link.id} className="footer__menu-item">
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className="footer__menu-link"
                     data-i18n={link.i18n}
                   >
                     {link.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -123,13 +124,13 @@ export default function Footer() {
                       name={concepts.icon}
                       className="footer__contact-icon"
                     />
-                    <a
-                      href={concepts.href}
+                    <Link
+                      to={concepts.href}
                       className="footer__menu-link"
                       data-i18n={concepts.i18n}
                     >
                       {concepts.title}
-                    </a>
+                    </Link>
                   </li>
                 )
               })}

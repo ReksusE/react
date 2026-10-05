@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import Icon from '@/components/Icon'
-import { Image } from 'minista'
 
 export default function TrustCard(props) {
   const { name, image, socials = [], i18n, delay = 1 } = props
@@ -8,8 +7,7 @@ export default function TrustCard(props) {
   return (
     <article className={clsx('trust__item', `reveal reveal-delay-${delay}`)}>
       <div className="trust__image">
-        <Image src={image}/>
-
+        <img src={image} alt={name} loading="lazy" />
       </div>
       <div className="trust__footer">
         <h3 className="trust__name" data-i18n={i18n}>

@@ -1,5 +1,4 @@
 import clsx from 'clsx'
-import { Image } from 'minista'
 
 export default function ShowroomCard(props) {
   const { name, image, alt, i18n, animation = 'reveal--fade-left' } = props
@@ -7,7 +6,7 @@ export default function ShowroomCard(props) {
   return (
     <article className={clsx('showrooms__item', 'reveal', animation)}>
       <div className="showrooms__image-wrap">
-        <Image src={image}/>
+        <img src={image} alt={alt || name} loading="lazy" />
       </div>
       <h3 className="showrooms__item-name" data-i18n={i18n}>
         {name}

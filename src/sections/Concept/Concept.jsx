@@ -12,7 +12,7 @@ const LOAD_MORE_COUNT = 8
 
 const breadcrumbsItems = [
   { title: 'Главная', href: '/', i18n: 'nav-home' },
-  { title: 'Концепты', href: '/concepts', i18n: '' },
+  { title: 'Концепты', href: '/concepts', i18n: 'nav-concepts' },
 ]
 
 export default function Concepts() {
@@ -50,14 +50,6 @@ export default function Concepts() {
   setVisibleCount((prev) => prev + LOAD_MORE_COUNT)
 }
 
-  // ⚠️ Временная отладка — удалите после проверки
-  console.log('📊 Concepts debug:', {
-    total: conceptsData.length,
-    filtered: filteredConcepts.length,
-    visibleCount,
-    hasMore,
-    visibleConceptsLength: visibleConcepts.length,
-  })
 
   return (
     <section className="concepts" data-js-concepts>

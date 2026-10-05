@@ -4,12 +4,11 @@ import Founder from '@/sections/Founder'
 import Realization from '@/sections/Realization'
 import Trust from '@/sections/Trust'
 import Showroom from '@/sections/Showroom'
+import usePageTitle from '@/hooks/usePageTitle'
 
-export const metadata = {
-  title: 'Home',
-}
+export default function Home() {
+  usePageTitle('Home')
 
-export default () => {
   return (
     <>
       <Hero />

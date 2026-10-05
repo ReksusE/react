@@ -1,6 +1,7 @@
 import './Categories.scss'
 import CategoryCard from '@/components/CategoriesCard'
 import categoriesData from '@/data/categories.json'
+import getAsset from '@/utils/getAsset'
 
 export default function Categories() {
   return (
@@ -11,7 +12,7 @@ export default function Categories() {
             <CategoryCard
               key={cat.id}
               title={cat.title}
-              image={cat.image}
+              image={getAsset(cat.image)}
               alt={cat.title}
               i18n={cat.i18n}
               delay={index + 1}

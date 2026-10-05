@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './Hero.scss'
 import heroSlides from '@/data/heroSlides.json'
+import getAsset from '@/utils/getAsset'
 
 export default function Hero() {
   const [activeSlide, setActiveSlide] = useState(0)
@@ -28,7 +29,7 @@ export default function Hero() {
               <div
                 key={slide.id}
                 className={`hero__bg ${index === activeSlide ? 'is-active' : ''}`}
-                style={{ backgroundImage: `url('${slide.image}')` }}
+                style={{ backgroundImage: `url('${getAsset(slide.image)}')` }}
               />
             ))}
           </div>

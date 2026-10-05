@@ -1,11 +1,13 @@
 import './Card.scss'
+import { Link } from 'react-router-dom'
+import getAsset from '@/utils/getAsset'
 
 export default function ConceptCard({ card }) {
   return (
     <article className="card" data-js-concepts-card>
       <img
         className="card-image"
-        src={card.image}
+        src={getAsset(card.image)}
         alt={card.title}
         loading="lazy"
       />
@@ -23,9 +25,9 @@ export default function ConceptCard({ card }) {
         </svg>
       </button>
       <div className="card-overlay">
-        <a href={`/Project.html?id=${card.id}`} className="card-title-link">
+        <Link to={`/project/${card.id}`} className="card-title-link">
           <h3 className="card-title">{card.title}</h3>
-        </a>
+        </Link>
         {card.features && card.features.length > 0 && (
           <ul className="card-list">
             {card.features.map((feature, index) => (

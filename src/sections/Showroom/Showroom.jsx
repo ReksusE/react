@@ -1,6 +1,7 @@
 import './Showrooms.scss'
 import ShowroomCard from '@/components/ShowroomCard'
 import Button from '@/components/Button'
+import getAsset from '@/utils/getAsset'
 import showroomsData from '@/data/showroomsData.json'
 
 export default function Showrooms() {
@@ -28,7 +29,7 @@ export default function Showrooms() {
             {cards[0] && (
               <ShowroomCard
                 name={cards[0].name}
-                image={cards[0].image}
+                image={getAsset(cards[0].image)}
                 alt={cards[0].alt}
                 i18n={cards[0].i18n}
                 animation={cards[0].animation}
@@ -56,7 +57,7 @@ export default function Showrooms() {
             {cards[1] && (
               <ShowroomCard
                 name={cards[1].name}
-                image={cards[1].image}
+                image={getAsset(cards[1].image)}
                 alt={cards[1].alt}
                 i18n={cards[1].i18n}
                 animation={cards[1].animation}
@@ -80,7 +81,7 @@ export default function Showrooms() {
 
         <Button
           className="showrooms__btn reveal reveal-delay-3"
-          modalTarget="showroom"
+          data-js-modal-open="showroom"
           data-i18n="showroom-callback"
         >
           заказать обратный звонок

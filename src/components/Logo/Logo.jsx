@@ -1,15 +1,16 @@
 import './Logo.scss'
 import clsx from 'clsx'
+import { Link } from 'react-router-dom'
 
-export default (props) => {
+export default function Logo(props) {
   const { className, loading = 'lazy' } = props
 
   const title = 'Home'
 
   return (
-    <a
+    <Link
       className={clsx('logo', className)}
-      href="/"
+      to="/"
       title={title}
       aria-label={title}
     >
@@ -21,6 +22,6 @@ export default (props) => {
         height={140}
         loading={loading}
       />
-    </a>
+    </Link>
   )
 }

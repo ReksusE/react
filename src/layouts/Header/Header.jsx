@@ -1,75 +1,56 @@
 import './Header.scss'
+import { useEffect, useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import Logo from '@/components/Logo'
 import BurgerButton from '@/components/BurgerButton'
 import Icon from '@/components/Icon'
 
-export default (props) => {
-  const { url } = props
+const menuItems = [
+  { label: 'Главная', href: '/' },
+  { label: 'Концепты', href: '/concepts' },
+  { label: 'Портфолио', href: '/portfolio' },
+  { label: 'Философия', href: '/philosophy' },
+  { label: 'Контакты', href: '/Contacts' },
+  { label: 'Избранное', href: '/Favorive' },
+]
 
-  const menuItems = [
-    {
-      label: 'Главная',
-      href: '/',
-    },
-    {
-      label: 'Концепты',
-      href: '/About',
-    },
-    {
-      label: 'Портфолио',
-      href: '/Portfolio',
-    },
-    {
-      label: 'Философия',
-      href: '/Philosophy',
-    },
-    {
-      label: 'Контакты',
-      href: '/About',
-    },
-    {
-      label: 'Избранное',
-      href: '/About',
-    },
-  ]
+const menuItems1 = [
+  { label: 'Загородный Дом', href: '/' },
+  { label: 'Городская Квартира', href: '/' },
+  { label: 'Общественные пространства', href: '/portfolio' },
+  { label: 'Облицовка', href: '/philosophy' },
+]
 
-  const menuItems1 = [
-    {
-      label: 'Загородный Дом',
-      href: '/',
-    },
-    {
-      label: 'Городская Квартира',
-      href: '/',
-    },
-    {
-      label: 'Общественные пространства',
-      href: '/Portfolio',
-    },
-    {
-      label: 'Облицовка',
-      href: '/Philosophy',
-    },
-  ]
+const socials = [
+  { label: 'Phone', icon: 'phone' },
+  { label: 'Instagram', icon: 'instagram' },
+]
 
-  const socials = [
-    {
-      label: 'Phone',
-      icon: 'phone',
-    },
-    {
-      label: 'Instagram',
-      icon: 'instagram',
-    },
-  ]
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { pathname } = useLocation()
+
+  // Закрываем меню при переходе на другую страницу
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
+
+  // Блокируем скролл страницы, пока открыто мобильное меню
+  useEffect(() => {
+    document.documentElement.classList.toggle('is-lock', isMenuOpen)
+
+    return () => document.documentElement.classList.remove('is-lock')
+  }, [isMenuOpen])
+
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev)
 
   return (
-    <header className="header" data-js-header>
+    <header className="header">
       <div className="header__body container">
         <Logo title="Home" />
 
-        <div className="header__nav" data-js-header-nav>
+        <div className={clsx('header__nav', isMenuOpen && 'is-active')}>
           <nav className="header__menu header__menu-top">
             <ul className="header__menu-list">
               {menuItems.map(({ label, href }, index) => (
@@ -80,16 +61,19 @@ export default (props) => {
                   )}
                   key={index}
                 >
-                  <a
-                    className={clsx(
-                      'header__menu-link',
-                      href === url && 'is-active',
-                      'header__menu-link-accent'
-                    )}
-                    href={href}
+                  <NavLink
+                    className={({ isActive }) =>
+                      clsx(
+                        'header__menu-link',
+                        'header__menu-link-accent',
+                        isActive && 'is-active'
+                      )
+                    }
+                    to={href}
+                    end
                   >
                     {label}
-                  </a>
+                  </NavLink>
                 </li>
               ))}
             </ul>
@@ -98,16 +82,13 @@ export default (props) => {
           <nav className="header__menu header__menu-bottom">
             <ul className="header__menu-list">
               {menuItems1.map(({ label, href }, index) => (
-                <li className={clsx('header__menu-item')} key={index}>
-                  <a
-                    className={clsx(
-                      'header__menu-link',
-                      'header__menu-link-bold'
-                    )}
-                    href={href}
+                <li className="header__menu-item" key={index}>
+                  <Link
+                    className="header__menu-link header__menu-link-bold"
+                    to={href}
                   >
                     {label}
-                  </a>
+                  </Link>
                   <Icon
                     name="caret-down-circle-outline"
                     className="header__menu-list__icon"
@@ -129,8 +110,8 @@ export default (props) => {
           ))}
 
           <BurgerButton
-            className="visible-mobile"
-            extraAttrs={{ 'data-js-header-burger-button': '' }}
+            className={clsx('visible-mobile', isMenuOpen && 'is-active')}
+            extraAttrs={{ onClick: toggleMenu, 'aria-expanded': isMenuOpen }}
           />
         </div>
       </div>

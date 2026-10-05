@@ -1,5 +1,6 @@
 import './Founder.scss'
 import Button from '@/components/Button'
+import getAsset from '@/utils/getAsset'
 
 export default function Founder() {
   return (
@@ -9,12 +10,12 @@ export default function Founder() {
           <div className="founder__image-wrapper reveal reveal--fade-left">
             <picture>
               <source
-                srcSet="src/assets/images/founder/founder-mobile.jpg"
+                srcSet={getAsset('images/founder/founder-mobile.jpg')}
                 media="(max-width: 1024px)"
               />
               <img
                 className="founder__image"
-                src="src/assets/images/founder/founder.jpg"
+                src={getAsset('images/founder/founder.jpg')}
                 alt="Ирина Новоселова"
                 width="390"
                 height="517"

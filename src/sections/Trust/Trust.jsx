@@ -3,6 +3,7 @@ import TrustCard from '@/components/TrustCard'
 import Icon from '@/components/Icon'
 import useTrustSlider from '@/modules/useTrustSlider'
 import trustData from '@/data/trustData.json'
+import getAsset from '@/utils/getAsset'
 
 export default function Trust() {
   const { sliderRef, scrollNext, scrollPrev } = useTrustSlider()
@@ -36,7 +37,7 @@ export default function Trust() {
             <TrustCard
               key={person.id}
               name={person.name}
-              image={person.image}
+              image={getAsset(person.image)}
               i18n={person.i18n}
               socials={person.socials}
               delay={(index % 12) + 1}

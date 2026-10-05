@@ -2,6 +2,7 @@ import './Realization.scss'
 import RealizationStep from '@/components/RealizationStep'
 import Button from '@/components/Button'
 import stepsData from '@/data/realizationSteps.json'
+import getAsset from '@/utils/getAsset'
 
 export default function Realization() {
   return (
@@ -27,12 +28,12 @@ export default function Realization() {
             ))}
           </div>
           <div className="realization__image">
-            <img src="src/assets/images/realisation/triangle.svg" alt="triangle" />
+            <img src={getAsset('images/realisation/triangle.svg')} alt="triangle" />
           </div>
         </div>
         <Button
           className="realization__btn reveal reveal-delay-4"
-          modalTarget="realization"
+          data-js-modal-open="realization"
           data-i18n="real-btn"
         >
           Получить предварительную оценку проекта
