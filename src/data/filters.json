@@ -1,0 +1,53 @@
+[
+  {
+    "key": "category",
+    "title": "Назначение очага",
+    "i18n": "filter-btn-1",
+    "options": [
+      { "value": "country", "title": "Загородный дом", "i18n": "cat-country" },
+      { "value": "city", "title": "Городская квартира", "i18n": "cat-city" },
+      { "value": "public", "title": "Общественные пространства", "i18n": "cat-public" }
+    ]
+  },
+  {
+    "key": "fuel",
+    "title": "Вид топлива",
+    "i18n": "filter-btn-2",
+    "options": [
+      { "value": "wood", "title": "Дрова", "i18n": "dropdown-item-1" },
+      { "value": "bioethanol", "title": "Биоэтанол", "i18n": "dropdown-item-2" },
+      { "value": "gas", "title": "Газ", "i18n": "dropdown-item-3" },
+      { "value": "electric", "title": "Электричество", "i18n": "dropdown-item-4" }
+    ]
+  },
+  {
+    "key": "style",
+    "title": "Стиль",
+    "i18n": "filter-btn-3",
+    "options": [
+      { "value": "loft", "title": "Лофт", "i18n": "dropdown-item-5" },
+      { "value": "minimalism", "title": "Минимализм", "i18n": "dropdown-item-6" },
+      { "value": "classic", "title": "Классика", "i18n": "dropdown-item-7" },
+      { "value": "scandi", "title": "Скандинавский", "i18n": "dropdown-item-8" }
+    ]
+  },
+  {
+    "key": "glass",
+    "title": "Выбор по стеклу",
+    "i18n": "filter-btn-4",
+    "options": [
+      { "value": "glass", "title": "Прямое/Угловое стекло", "i18n": "dropdown-item-9" },
+      { "value": "no-glass", "title": "Без стекла", "i18n": "dropdown-item-10" }
+    ]
+  },
+  {
+    "key": "material",
+    "title": "Материал облицовки",
+    "i18n": "filter-btn-5",
+    "options": [
+      { "value": "stone", "title": "Камень", "i18n": "dropdown-item-11" },
+      { "value": "ceramic", "title": "Изразец", "i18n": "dropdown-item-12" },
+      { "value": "metal", "title": "Металл", "i18n": "dropdown-item-13" }
+    ]
+  }
+]

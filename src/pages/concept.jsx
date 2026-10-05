@@ -1,3 +1,4 @@
+import Concepts from '@/sections/Concept'
 import Showroom from '@/sections/Showroom'
 
 export const metadata = {
@@ -7,7 +8,7 @@ export const metadata = {
 export default () => {
   return (
     <>
-
+      <Concepts />
       <Showroom />
     </>
   )
