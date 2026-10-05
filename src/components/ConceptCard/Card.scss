@@ -148,3 +148,81 @@
         }
     }
 }
+
+.card {
+    position: relative;
+
+    &-select {
+        z-index: 12;
+        align-self: end;
+        justify-self: start;
+        display: flex;
+        align-items: center;
+        gap: rem(8);
+        margin: rem(15);
+        padding: rem(6) rem(10);
+        background: rgba(0, 0, 0, 0.72);
+        color: var(--color-light);
+        cursor: pointer;
+        font-size: rem(12);
+
+        input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        &__control {
+            width: rem(16);
+            height: rem(16);
+            border: rem(1) solid var(--color-light);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input:checked + &__control {
+            background: var(--color-light);
+
+            &::after {
+                content: '';
+                width: rem(8);
+                height: rem(8);
+                background: var(--color-dark);
+            }
+        }
+    }
+
+    &-management {
+        z-index: 12;
+        align-self: end;
+        justify-self: end;
+        display: flex;
+        gap: rem(6);
+        margin: rem(15);
+        pointer-events: all;
+
+        &__button {
+            border: none;
+            padding: rem(8) rem(10);
+            background: rgba(0, 0, 0, 0.78);
+            color: var(--color-light);
+            font-size: rem(11);
+            cursor: pointer;
+            transition: opacity var(--transition-duration);
+
+            &:hover {
+                opacity: 0.75;
+            }
+
+            &--delete {
+                background: var(--color-red);
+            }
+        }
+    }
+
+    &.is-selected {
+        outline: rem(3) solid var(--color-light);
+        outline-offset: rem(-3);
+    }
+}
