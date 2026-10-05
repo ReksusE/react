@@ -2,15 +2,25 @@ import './Card.scss'
 import { Link } from 'react-router-dom'
 import getAsset from '@/utils/getAsset'
 
-export default function ConceptCard({ card }) {
+export default function ConceptCard({
+  card,
+  isSelected,
+  onSelect,
+  onEdit,
+  onDelete,
+}) {
   return (
-    <article className="card" data-js-concepts-card>
+    <article
+      className={`card ${isSelected ? 'is-selected' : ''}`}
+      data-js-concepts-card
+    >
       <img
         className="card-image"
         src={getAsset(card.image)}
         alt={card.title}
         loading="lazy"
       />
+
       <button
         className="card-favorite"
         type="button"
@@ -24,10 +34,22 @@ export default function ConceptCard({ card }) {
           />
         </svg>
       </button>
+
+      <label className="card-select">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={() => onSelect(card.id)}
+        />
+        <span className="card-select__control" />
+        <span className="card-select__text">Выбрать</span>
+      </label>
+
       <div className="card-overlay">
         <Link to={`/project/${card.id}`} className="card-title-link">
           <h3 className="card-title">{card.title}</h3>
         </Link>
+
         {card.features && card.features.length > 0 && (
           <ul className="card-list">
             {card.features.map((feature, index) => (
@@ -39,6 +61,15 @@ export default function ConceptCard({ card }) {
             ))}
           </ul>
         )}
+      </div>
+
+      <div className="card-management">
+        <button type="button" className="card-management__button" onClick={() => onEdit(card)}>
+          Редактировать
+        </button>
+        <button type="button" className="card-management__button card-management__button--delete" onClick={() => onDelete(card.id)}>
+          Удалить
+        </button>
       </div>
     </article>
   )
