@@ -1,0 +1,47 @@
+.grid {
+  --gridColumns: 1;
+
+  display: grid;
+  grid-template-columns: repeat(var(--gridColumns), 1fr);
+  gap: 40px fluid(40, 20);
+
+  @for $i from 1 through 12 {
+    &--#{$i} {
+      --gridColumns: #{$i};
+    }
+  }
+
+  &--3 {
+    @include laptop-s {
+      --gridColumns: 2;
+    }
+
+    @include mobile {
+      --gridColumns: 1;
+    }
+  }
+
+  &--4 {
+    @include tablet {
+      --gridColumns: 2;
+    }
+
+    @include mobile-s {
+      --gridColumns: 1;
+    }
+  }
+
+  &--6 {
+    @include laptop-s {
+      --gridColumns: 3;
+    }
+
+    @include mobile {
+      --gridColumns: 2;
+    }
+
+    @include mobile-s {
+      --gridColumns: 1;
+    }
+  }
+}
