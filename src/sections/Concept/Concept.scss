@@ -153,3 +153,63 @@
         }
     }
 }
+
+.concepts {
+    &__management {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: rem(15);
+        flex-wrap: wrap;
+    }
+
+    &__management-actions {
+        display: flex;
+        gap: rem(10);
+        flex-wrap: wrap;
+    }
+
+    &__management-button {
+        border: rem(1) solid var(--color-gray);
+        background: transparent;
+        color: var(--color-light);
+        padding: rem(12) rem(18);
+        font-size: rem(13);
+        cursor: pointer;
+        transition: opacity var(--transition-duration), background var(--transition-duration);
+
+        &:hover:not(:disabled) {
+            background: var(--color-dark-alt);
+        }
+
+        &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        &--delete {
+            border-color: var(--color-red);
+            color: var(--color-red);
+        }
+    }
+
+    &__selected-count {
+        color: var(--color-gray);
+        font-size: rem(14);
+    }
+
+    &__empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        color: var(--color-gray-alt);
+        padding: rem(30);
+
+        button {
+            border: none;
+            background: transparent;
+            color: var(--color-light);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+}
