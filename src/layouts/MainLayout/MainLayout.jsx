@@ -7,7 +7,6 @@ import Footer from '@/layouts/Footer'
 export default function MainLayout() {
   const { pathname } = useLocation()
 
-  // Прокрутка вверх при смене страницы
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])

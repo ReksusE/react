@@ -47,17 +47,11 @@ export default function Home() {
   return (
     <>
       <Hero />
-
       <Categories />
-
       <Founder />
-
       <Realization />
-
       <Trust />
-
       <Showroom />
-
       {activeModal && (
         <Modal
           type={activeModal}

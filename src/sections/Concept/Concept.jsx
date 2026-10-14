@@ -41,8 +41,8 @@ export default function Concepts() {
         ([key, value]) =>
           value === null ||
           value === undefined ||
-          concept[key] === value,
-      ),
+          concept[key] === value
+      )
     )
   }, [concepts, activeFilters])
 
@@ -57,7 +57,7 @@ export default function Concepts() {
     setSelectedIds((currentIds) =>
       currentIds.includes(id)
         ? currentIds.filter((selectedId) => selectedId !== id)
-        : [...currentIds, id],
+        : [...currentIds, id]
     )
   }
 
@@ -66,7 +66,7 @@ export default function Concepts() {
 
     if (allVisibleSelected) {
       setSelectedIds((currentIds) =>
-        currentIds.filter((id) => !visibleIds.includes(id)),
+        currentIds.filter((id) => !visibleIds.includes(id))
       )
       return
     }
@@ -78,10 +78,10 @@ export default function Concepts() {
 
   const handleDeleteConcept = (id) => {
     setConcepts((currentConcepts) =>
-      currentConcepts.filter((concept) => concept.id !== id),
+      currentConcepts.filter((concept) => concept.id !== id)
     )
     setSelectedIds((currentIds) =>
-      currentIds.filter((selectedId) => selectedId !== id),
+      currentIds.filter((selectedId) => selectedId !== id)
     )
 
     if (editingConcept?.id === id) {
@@ -96,7 +96,7 @@ export default function Concepts() {
     }
 
     setConcepts((currentConcepts) =>
-      currentConcepts.filter((concept) => !selectedIds.includes(concept.id)),
+      currentConcepts.filter((concept) => !selectedIds.includes(concept.id))
     )
     setSelectedIds([])
 
@@ -127,8 +127,8 @@ export default function Concepts() {
         currentConcepts.map((concept) =>
           concept.id === editingConcept.id
             ? { ...concept, ...conceptData }
-            : concept,
-        ),
+            : concept
+        )
       )
     } else {
       const newConcept = {
