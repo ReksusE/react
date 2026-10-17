@@ -2,6 +2,8 @@
 
 :root {
   --color-light: #ffffff;
+  --color-white: #ffffff;
+  --color-black: #000000;
 
   --color-dark: #1a1a18;
   --color-dark-alt: #000000;
@@ -24,6 +26,10 @@
   --container-padding-x: #{30px};
 
   --transition-duration: 0.2s;
+
+  --border-width-m: #{2px};
+  --border-radius: #{20px};
+  --border-radius-xs: #{8px};
 
   --border-shadow:
     1px 1px 2px 0 rgba(43, 43, 42, 0.3) inset,

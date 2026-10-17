@@ -1,4 +1,5 @@
 import './Grid.scss'
+import { Children } from 'react'
 import clsx from 'clsx'
 
 export default (props) => {
@@ -12,7 +13,7 @@ export default (props) => {
     <ul
       className={clsx(`grid grid--${columns}`, className)}
     >
-      {children.map((child, index) => (
+      {Children.toArray(children).map((child, index) => (
         <li
           className="grid__item"
           key={index}

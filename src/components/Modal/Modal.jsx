@@ -5,12 +5,17 @@ import clsx from 'clsx'
 
 export default function Modal({ isOpen, title, subtitle, onClose, className, children }) {
   const dialogRef = useRef(null)
+  const onCloseRef = useRef(onClose)
+
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
 
   useEffect(() => {
     if (!isOpen) {return}
 
     const previouslyFocused = document.activeElement
-    const onKeyDown = (e) => e.key === 'Escape' && onClose()
+    const onKeyDown = (e) => e.key === 'Escape' && onCloseRef.current?.()
 
     document.addEventListener('keydown', onKeyDown)
     document.documentElement.classList.add('is-lock')
@@ -21,7 +26,7 @@ export default function Modal({ isOpen, title, subtitle, onClose, className, chi
       document.documentElement.classList.remove('is-lock')
       previouslyFocused?.focus?.()
     }
-  }, [isOpen, onClose])
+  }, [isOpen])
 
   if (!isOpen) {return null}
 

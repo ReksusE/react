@@ -69,14 +69,14 @@
     }
 
     &__item {
-        flex: 0 0 calc(16.666% - rem(17));
+        flex: 0 0 calc(16.666% - #{rem(17)});
         min-width: rem(170);
         display: flex;
         flex-direction: column;
         scroll-snap-align: start;
 
         @include mobile {
-            flex: 0 0 calc(33.3% - rem(5));
+            flex: 0 0 calc(33.3% - #{rem(5)});
             min-width: rem(118);
         }
     }

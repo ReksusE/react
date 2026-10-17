@@ -1,10 +1,14 @@
 import './Realization.scss'
+import { useState } from 'react'
 import RealizationStep from '@/components/RealizationStep'
 import Button from '@/components/Button'
+import CallbackModal from '@/components/CallbackModal'
 import stepsData from '@/data/realizationSteps.json'
 import getAsset from '@/utils/getAsset'
 
 export default function Realization() {
+  const [isCallbackOpen, setIsCallbackOpen] = useState(false)
+
   return (
     <section className="realization">
       <div className="realization__container container">
@@ -33,12 +37,13 @@ export default function Realization() {
         </div>
         <Button
           className="realization__btn reveal reveal-delay-4"
-          data-js-modal-open="realization"
+          onClick={() => setIsCallbackOpen(true)}
           data-i18n="real-btn"
         >
           Получить предварительную оценку проекта
         </Button>
       </div>
+      <CallbackModal isOpen={isCallbackOpen} onClose={() => setIsCallbackOpen(false)} />
     </section>
   )
 }

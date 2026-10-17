@@ -1,8 +1,12 @@
 import './Founder.scss'
+import { useState } from 'react'
 import Button from '@/components/Button'
+import CallbackModal from '@/components/CallbackModal'
 import getAsset from '@/utils/getAsset'
 
 export default function Founder() {
+  const [isCallbackOpen, setIsCallbackOpen] = useState(false)
+
   return (
     <section className="founder">
       <div className="founder__container container">
@@ -42,7 +46,7 @@ export default function Founder() {
             </div>
             <Button
               className="founder__button"
-              data-js-modal-open="founder"
+              onClick={() => setIsCallbackOpen(true)}
               data-i18n="founder-btn"
             >
               получить консультацию руководителя
@@ -50,6 +54,7 @@ export default function Founder() {
           </div>
         </div>
       </div>
+      <CallbackModal isOpen={isCallbackOpen} onClose={() => setIsCallbackOpen(false)} />
     </section>
   )
 }

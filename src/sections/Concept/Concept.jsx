@@ -30,6 +30,8 @@ export default function Concepts() {
   // modal: null | { mode: 'view' | 'edit' | 'create', id?: string }
   const [modal, setModal] = useState(null)
 
+  const closeModal = useCallback(() => setModal(null), [])
+
   const handleFilterChange = (filterKey, value) => {
     setActiveFilters((prev) => ({ ...prev, [filterKey]: value }))
     setVisibleCount(INITIAL_VISIBLE_COUNT)
@@ -41,16 +43,16 @@ export default function Concepts() {
     setResetTrigger((prev) => prev + 1)
   }
 
-  const filteredConcepts = useMemo(() => {
-    return concepts.filter((concept) =>
-      Object.entries(activeFilters).every(
-        ([key, value]) =>
-          value === null ||
-          value === undefined ||
-          concept[key] === value
-      )
-    )
-  }, [concepts, activeFilters])
+  const filteredConcepts = useMemo(
+    () =>
+      items.filter((concept) =>
+        Object.entries(activeFilters).every(
+          ([key, value]) =>
+            value === null || value === undefined || concept[key] === value
+        )
+      ),
+    [items, activeFilters]
+  )
 
   const visibleConcepts = filteredConcepts.slice(0, visibleCount)
   const hasMore = visibleCount < filteredConcepts.length
@@ -59,99 +61,22 @@ export default function Concepts() {
     ? items.find((item) => item.id === modal.id)
     : null
 
-  const handleToggleSelect = (id) => {
-    setSelectedIds((currentIds) =>
-      currentIds.includes(id)
-        ? currentIds.filter((selectedId) => selectedId !== id)
-        : [...currentIds, id]
-    )
-  }
-
   const toggleSelect = useCallback(
     (id) => dispatch({ type: ACTIONS.TOGGLE_SELECT, id }),
     [dispatch]
   )
+
   const toggleFavorite = useCallback(
     (id) => {
       if (!toggleFav(id)) {
-        showToast('Войдите в аккаунт, чтобы добавлять концепты в избранное', 'error')
+        showToast(
+          'Войдите в аккаунт, чтобы добавлять концепты в избранное',
+          'error'
+        )
       }
     },
     [toggleFav, showToast]
   )
-
-    if (allVisibleSelected) {
-      setSelectedIds((currentIds) =>
-        currentIds.filter((id) => !visibleIds.includes(id))
-      )
-      return
-    }
-
-    setSelectedIds((currentIds) => [
-      ...new Set([...currentIds, ...visibleIds]),
-    ])
-  }
-
-  const handleDeleteConcept = (id) => {
-    setConcepts((currentConcepts) =>
-      currentConcepts.filter((concept) => concept.id !== id)
-    )
-    setSelectedIds((currentIds) =>
-      currentIds.filter((selectedId) => selectedId !== id)
-    )
-
-    if (editingConcept?.id === id) {
-      setEditingConcept(null)
-      setIsFormOpen(false)
-    }
-  }
-
-  const handleDeleteSelected = () => {
-    if (!selectedIds.length) {
-      return
-    }
-
-    setConcepts((currentConcepts) =>
-      currentConcepts.filter((concept) => !selectedIds.includes(concept.id))
-    )
-    setSelectedIds([])
-
-    if (editingConcept && selectedIds.includes(editingConcept.id)) {
-      setEditingConcept(null)
-      setIsFormOpen(false)
-    }
-  }
-
-  const handleEditConcept = (concept) => {
-    setEditingConcept(concept)
-    setIsFormOpen(true)
-  }
-
-  const handleOpenCreateForm = () => {
-    setEditingConcept(null)
-    setIsFormOpen(true)
-  }
-
-  const handleCloseForm = () => {
-    setEditingConcept(null)
-    setIsFormOpen(false)
-  }
-
-  const handleSaveConcept = (conceptData) => {
-    if (editingConcept) {
-      setConcepts((currentConcepts) =>
-        currentConcepts.map((concept) =>
-          concept.id === editingConcept.id
-            ? { ...concept, ...conceptData }
-            : concept
-        )
-      )
-    } else {
-      dispatch({ type: ACTIONS.UPDATE, payload: { ...values, id: modal.id } })
-      showToast('Изменения сохранены', 'success')
-      setModal({ mode: 'view', id: modal.id })
-    }
-  }
 
   const allVisibleSelected =
     filteredConcepts.length > 0 &&
@@ -163,6 +88,38 @@ export default function Concepts() {
         ? { type: ACTIONS.CLEAR_SELECTION }
         : { type: ACTIONS.SELECT_MANY, ids: filteredConcepts.map((c) => c.id) }
     )
+
+  const handleDelete = (concept) => {
+    if (!window.confirm(`Удалить концепт «${concept.title}»?`)) {return}
+
+    dispatch({ type: ACTIONS.REMOVE, id: concept.id })
+    showToast('Концепт удалён', 'success')
+    closeModal()
+  }
+
+  const handleDeleteSelected = () => {
+    if (selectedIds.length === 0) {return}
+    if (!window.confirm(`Удалить выбранные концепты (${selectedIds.length})?`)) {
+      return
+    }
+
+    dispatch({ type: ACTIONS.REMOVE_SELECTED })
+    showToast('Выбранные концепты удалены', 'success')
+  }
+
+  const handleSubmit = (values) => {
+    if (modal?.mode === 'create') {
+      dispatch({ type: ACTIONS.ADD, payload: values })
+      showToast('Концепт добавлен', 'success')
+      closeModal()
+
+      return
+    }
+
+    dispatch({ type: ACTIONS.UPDATE, payload: { ...values, id: modal.id } })
+    showToast('Изменения сохранены', 'success')
+    setModal({ mode: 'view', id: modal.id })
+  }
 
   const modalTitle = {
     create: 'Новый концепт',
@@ -246,7 +203,9 @@ export default function Concepts() {
       </div>
 
       <Modal
-        isOpen={Boolean(modal) && (modal.mode === 'create' || activeConcept)}
+        isOpen={
+          Boolean(modal) && (modal.mode === 'create' || Boolean(activeConcept))
+        }
         title={modalTitle}
         onClose={closeModal}
       >
