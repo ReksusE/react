@@ -11,6 +11,12 @@ $mobile-s: 480.98;
   }
 }
 
+@mixin laptop-s {
+  @media (width <= rem(1199.98)) {
+    @content;
+  }
+}
+
 @mixin laptop {
   @media (width <= rem($laptop)) {
     @content;

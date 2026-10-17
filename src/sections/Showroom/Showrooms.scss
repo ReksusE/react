@@ -174,10 +174,10 @@
             color: var(--color-accent-05);
             font-size: rem(16);
             font-weight: 400;
-            transition-duration: --transition-duration;
+            transition-duration: var(--transition-duration);
 
             &:hover {
-                color: var(--color-wight);
+                color: var(--color-light);
                 opacity: 0.7;
             }
         }

@@ -5,8 +5,6 @@ import Realization from '@/sections/Realization'
 import Trust from '@/sections/Trust'
 import Showroom from '@/sections/Showroom'
 import usePageTitle from '@/hooks/usePageTitle'
-import Modal from '@/components/Modal'
-
 
 export default function Home() {
   usePageTitle('Home')
@@ -19,12 +17,6 @@ export default function Home() {
       <Realization />
       <Trust />
       <Showroom />
-      {activeModal && (
-        <Modal
-          type={activeModal}
-          onClose={() => setActiveModal(null)}
-        />
-      )}
     </>
   )
 }
