@@ -1,0 +1,330 @@
+.admin {
+  display: grid;
+  grid-template-columns: rem(240) minmax(0, 1fr);
+  min-height: 100vh;
+  font-family: var(--font-family-accent);
+  color: var(--color-light);
+  background: var(--color-dark);
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+
+  &__sidebar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: rem(24);
+    height: 100vh;
+    padding: rem(24) rem(16);
+    background: var(--color-dark-alt);
+    border-right: rem(1) solid rgba(255, 255, 255, 0.08);
+
+    @include tablet {
+      position: static;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      height: auto;
+      border-right: none;
+      border-bottom: rem(1) solid rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  &__logo img {
+    display: block;
+    width: rem(110);
+    height: auto;
+
+    @include tablet {
+      width: rem(60);
+    }
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: rem(6);
+
+    @include tablet {
+      flex-direction: row;
+      flex-grow: 1;
+    }
+  }
+
+  &__nav-btn {
+    padding: rem(12) rem(14);
+    font: inherit;
+    font-size: rem(15);
+    text-align: left;
+    color: var(--color-gray);
+    background: none;
+    border: none;
+    border-left: rem(3) solid transparent;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-light);
+    }
+
+    &.is-active {
+      color: var(--color-accent);
+      background: rgba(240, 124, 0, 0.08);
+      border-left-color: var(--color-accent);
+    }
+  }
+
+  &__logout {
+    margin-top: auto;
+    padding: rem(12) rem(14);
+    font: inherit;
+    font-size: rem(14);
+    text-align: left;
+    color: var(--color-gray);
+    background: none;
+    border: rem(1) solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-red);
+      border-color: var(--color-red);
+    }
+
+    @include tablet {
+      margin-top: 0;
+    }
+  }
+
+  &__main {
+    min-width: 0;
+    padding: rem(24) rem(32);
+
+    @include mobile {
+      padding: rem(16);
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: rem(24);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: rem(28);
+    text-transform: uppercase;
+  }
+}
+
+.admin-muted {
+  color: var(--color-gray);
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: rem(16);
+  margin-bottom: rem(24);
+
+  @include tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.admin-stat {
+  display: flex;
+  flex-direction: column;
+  gap: rem(4);
+  padding: rem(20);
+  background: var(--color-dark-alt);
+  border: rem(1) solid rgba(255, 255, 255, 0.08);
+
+  &__value {
+    font-size: rem(36);
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  &__label {
+    font-size: rem(14);
+    color: var(--color-gray);
+  }
+}
+
+.admin-panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: rem(16);
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-panel {
+  padding: rem(20);
+  background: var(--color-dark-alt);
+  border: rem(1) solid rgba(255, 255, 255, 0.08);
+
+  &__title {
+    margin: 0 0 rem(16);
+    font-size: rem(16);
+    font-weight: 400;
+    text-transform: uppercase;
+    color: var(--color-gray);
+
+    &--spaced {
+      margin-top: rem(28);
+    }
+  }
+}
+
+.admin-bars {
+  display: flex;
+  flex-direction: column;
+  gap: rem(12);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  &__row {
+    display: grid;
+    grid-template-columns: rem(150) minmax(0, 1fr) rem(30);
+    align-items: center;
+    gap: rem(12);
+    font-size: rem(14);
+
+    @include mobile {
+      grid-template-columns: rem(100) minmax(0, 1fr) rem(30);
+    }
+  }
+
+  &__track {
+    height: rem(8);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &__fill {
+    display: block;
+    height: 100%;
+    background: var(--color-accent);
+  }
+
+  &__count {
+    text-align: right;
+    color: var(--color-gray);
+  }
+}
+
+.admin-recent {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: rem(8) 0;
+    font-size: rem(14);
+    border-bottom: rem(1) solid rgba(255, 255, 255, 0.06);
+  }
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(12);
+  margin-bottom: rem(16);
+}
+
+.admin-search,
+.admin-select {
+  padding: rem(11) rem(14);
+  font: inherit;
+  font-size: rem(14);
+  color: var(--color-light);
+  background: var(--color-dark-alt);
+  border: rem(1) solid rgba(255, 255, 255, 0.15);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+}
+
+.admin-search {
+  flex: 1 1 rem(220);
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+  background: var(--color-dark-alt);
+  border: rem(1) solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: rem(14);
+
+  th,
+  td {
+    padding: rem(12) rem(14);
+    text-align: left;
+    border-bottom: rem(1) solid rgba(255, 255, 255, 0.06);
+    vertical-align: middle;
+  }
+
+  th {
+    font-weight: 400;
+    color: var(--color-gray);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__thumb {
+    display: block;
+    width: rem(44);
+    height: rem(58);
+    object-fit: cover;
+  }
+
+  &__actions {
+    display: flex;
+    gap: rem(8);
+    justify-content: flex-end;
+    white-space: nowrap;
+
+    .concept-btn {
+      padding: rem(8) rem(12);
+      font-size: rem(12);
+    }
+  }
+
+  &__empty {
+    padding: rem(30);
+    text-align: center;
+  }
+}
+
+.admin-badge {
+  margin-left: rem(8);
+  padding: rem(2) rem(8);
+  font-size: rem(11);
+  color: var(--color-accent);
+  border: rem(1) solid var(--color-accent);
+}
+
+.admin-role {
+  padding: rem(3) rem(10);
+  font-size: rem(12);
+  background: rgba(255, 255, 255, 0.08);
+
+  &--admin {
+    color: var(--color-accent);
+    background: rgba(240, 124, 0, 0.12);
+  }
+}

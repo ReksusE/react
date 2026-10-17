@@ -1,0 +1,23 @@
+.theme-fab {
+  position: fixed;
+  z-index: 500;
+  right: rem(20);
+  bottom: rem(20);
+  width: rem(48);
+  height: rem(48);
+  background: var(--color-dark);
+  border: rem(1) solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 rem(6) rem(20) rgba(0, 0, 0, 0.35);
+
+  // чтобы не перекрывать тосты, поднимаем их над кнопкой
+  ~ .toast-container {
+    bottom: rem(80);
+  }
+}
+
+.icon-moon,
+.icon-sun {
+  display: none;
+  width: rem(24);
+  height: rem(24);
+}
