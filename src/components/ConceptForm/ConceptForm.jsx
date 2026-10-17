@@ -1,158 +1,120 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import './ConceptForm.scss'
+const SELECT_FIELDS = [
+  ['category', 'Назначение очага'],
+  ['fuel', 'Вид топлива'],
+  ['style', 'Стиль'],
+  ['glass', 'Стекло'],
+  ['material', 'Материал'],
+]
 
-export default function ConceptForm({ concept, defaultImage, onSave, onCancel }) {
-  const [title, setTitle] = useState('')
-  const [category, setCategory] = useState('')
-  const [fuel, setFuel] = useState('')
-  const [style, setStyle] = useState('')
-  const [glass, setGlass] = useState('')
-  const [material, setMaterial] = useState('')
-  const [features, setFeatures] = useState('')
-  const [description, setDescription] = useState('')
-  const [image, setImage] = useState(defaultImage || '')
+const EMPTY = {
+  title: '',
+  category: '',
+  fuel: '',
+  style: '',
+  glass: '',
+  material: '',
+  image: '',
+  features: '',
+  description: '',
+}
 
-  useEffect(() => {
-    setTitle(concept?.title || '')
-    setCategory(concept?.category || '')
-    setFuel(concept?.fuel || '')
-    setStyle(concept?.style || '')
-    setGlass(concept?.glass || '')
-    setMaterial(concept?.material || '')
-    setFeatures(concept?.features?.join(', ') || '')
-    setDescription(concept?.description || '')
-    setImage(concept?.image || defaultImage || '')
-  }, [concept, defaultImage])
+const unique = (items, key) => [
+  ...new Set(items.map((item) => item[key]).filter(Boolean)),
+]
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
+export default function ConceptForm({ initial, existing, onSubmit, onCancel }) {
+  const [values, setValues] = useState(() =>
+    initial
+      ? { ...EMPTY, ...initial, features: (initial.features || []).join(', ') }
+      : EMPTY
+  )
+  const [error, setError] = useState('')
 
-    const trimmedTitle = title.trim()
+  const setField = (key) => (e) =>
+    setValues((prev) => ({ ...prev, [key]: e.target.value }))
 
-    if (!trimmedTitle) {
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if (!values.title.trim()) {
+      setError('Укажите название концепта')
       return
     }
 
-    onSave({
-      title: trimmedTitle,
-      category: category.trim(),
-      fuel: fuel.trim(),
-      style: style.trim(),
-      glass: glass.trim(),
-      material: material.trim(),
-      features: features
+    onSubmit({
+      ...values,
+      title: values.title.trim(),
+      features: values.features
         .split(',')
-        .map((feature) => feature.trim())
+        .map((item) => item.trim())
         .filter(Boolean),
-      description: description.trim(),
-      image: image.trim(),
     })
   }
 
   return (
-    <div className="concept-form">
-      <div className="concept-form__header">
-        <h3 className="concept-form__title">
-          {concept ? 'Редактировать концепт' : 'Добавить концепт'}
-        </h3>
-        <button
-          className="concept-form__close"
-          type="button"
-          onClick={onCancel}
-          aria-label="Закрыть форму"
-        >
-          ×
-        </button>
+    <form className="concept-form" onSubmit={handleSubmit} noValidate>
+      <label className="concept-form__field">
+        <span>Название *</span>
+        <input
+          value={values.title}
+          onChange={setField('title')}
+          autoFocus
+          aria-invalid={Boolean(error)}
+        />
+        {error && <small className="concept-form__error">{error}</small>}
+      </label>
+
+      <div className="concept-form__grid">
+        {SELECT_FIELDS.map(([key, label]) => (
+          <label className="concept-form__field" key={key}>
+            <span>{label}</span>
+            <input
+              list={`concept-${key}-options`}
+              value={values[key]}
+              onChange={setField(key)}
+            />
+            <datalist id={`concept-${key}-options`}>
+              {unique(existing, key).map((option) => (
+                <option key={option} value={option} />
+              ))}
+            </datalist>
+          </label>
+        ))}
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="concept-form__grid">
-          <label className="concept-form__field">
-            <span>Название</span>
-            <input
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              required
-            />
-          </label>
+      <label className="concept-form__field">
+        <span>Изображение (путь или URL)</span>
+        <input
+          value={values.image}
+          onChange={setField('image')}
+          placeholder="/src/assets/images/concepts/concepts-1.png"
+        />
+      </label>
 
-          <label className="concept-form__field">
-            <span>Категория</span>
-            <input
-              value={category}
-              onChange={(event) => setCategory(event.target.value)}
-            />
-          </label>
+      <label className="concept-form__field">
+        <span>Особенности (через запятую)</span>
+        <input value={values.features} onChange={setField('features')} />
+      </label>
 
-          <label className="concept-form__field">
-            <span>Топливо</span>
-            <input
-              value={fuel}
-              onChange={(event) => setFuel(event.target.value)}
-            />
-          </label>
+      <label className="concept-form__field">
+        <span>Описание</span>
+        <textarea
+          rows="4"
+          value={values.description}
+          onChange={setField('description')}
+        />
+      </label>
 
-          <label className="concept-form__field">
-            <span>Стиль</span>
-            <input
-              value={style}
-              onChange={(event) => setStyle(event.target.value)}
-            />
-          </label>
-
-          <label className="concept-form__field">
-            <span>Стекло</span>
-            <input
-              value={glass}
-              onChange={(event) => setGlass(event.target.value)}
-            />
-          </label>
-
-          <label className="concept-form__field">
-            <span>Материал</span>
-            <input
-              value={material}
-              onChange={(event) => setMaterial(event.target.value)}
-            />
-          </label>
-
-          <label className="concept-form__field concept-form__field--wide">
-            <span>Особенности через запятую</span>
-            <input
-              value={features}
-              onChange={(event) => setFeatures(event.target.value)}
-              placeholder="экологичное, компактность, стиль"
-            />
-          </label>
-
-          <label className="concept-form__field concept-form__field--wide">
-            <span>Описание</span>
-            <textarea
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-              rows="3"
-            />
-          </label>
-
-          <label className="concept-form__field concept-form__field--wide">
-            <span>Путь к изображению</span>
-            <input
-              value={image}
-              onChange={(event) => setImage(event.target.value)}
-            />
-          </label>
-        </div>
-
-        <div className="concept-form__actions">
-          <button type="button" onClick={onCancel}>
-            Отмена
-          </button>
-          <button type="submit">
-            {concept ? 'Сохранить изменения' : 'Добавить концепт'}
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="concept-form__actions">
+        <button type="submit" className="concept-btn concept-btn--primary">
+          {initial ? 'Сохранить' : 'Добавить'}
+        </button>
+        <button type="button" className="concept-btn" onClick={onCancel}>
+          Отмена
+        </button>
+      </div>
+    </form>
   )
 }

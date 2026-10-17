@@ -1,103 +1,56 @@
 import './Modal.scss'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
+import clsx from 'clsx'
 
-import ModalContactForm from './ModalContactForm'
-import ModalRealizationForm from './ModalRealizationForm'
-
-const MODALS = {
-  founder: {
-    title: 'Получить консультацию руководителя',
-    subtitle:
-      'Оставьте ваши контакты, и руководитель бюро свяжется с вами для детального обсуждения и помощи с вашим проектом',
-    form: 'contact',
-  },
-
-  showroom: {
-    title: 'Заказать обратный звонок',
-    form: 'contact',
-  },
-
-  realization: {
-    title: 'Получить предварительную оценку проекта',
-    subtitle:
-      'Отправьте ваш проект, и специалисты бюро сделают его предварительную оценку и предложат способы реализации.',
-    form: 'realization',
-  },
-}
-
-export default function Modal({ type, onClose }) {
-  const modal = MODALS[type]
+export default function Modal({ isOpen, title, subtitle, onClose, className, children }) {
+  const dialogRef = useRef(null)
 
   useEffect(() => {
-    if (!modal) {
-      return undefined
-    }
+    if (!isOpen) {return}
 
+    const previouslyFocused = document.activeElement
+    const onKeyDown = (e) => e.key === 'Escape' && onClose()
+
+    document.addEventListener('keydown', onKeyDown)
     document.documentElement.classList.add('is-lock')
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
+    dialogRef.current?.focus()
 
     return () => {
+      document.removeEventListener('keydown', onKeyDown)
       document.documentElement.classList.remove('is-lock')
-      document.removeEventListener('keydown', handleKeyDown)
+      previouslyFocused?.focus?.()
     }
-  }, [modal, onClose])
+  }, [isOpen, onClose])
 
-  if (!modal) {
-    return null
-  }
+  if (!isOpen) {return null}
 
-  return (
-    <div className="modal is-active">
+  return createPortal(
+    <div
+      className="modal"
+      onMouseDown={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div
-        className="modal__overlay"
-        role="button"
-        tabIndex={0}
-        aria-label="Закрыть модальное окно"
-        onClick={onClose}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            onClose()
-          }
-        }}
-      />
-
-      <div className="modal__content">
-        <header className="modal__header">
-          <button
-            className="modal__close"
-            type="button"
-            aria-label="Закрыть"
-            onClick={onClose}
-          >
-            ×
-          </button>
-
-          <h2 className="modal__title">
-            {modal.title}
-          </h2>
-
-          {modal.subtitle && (
-            <p className="modal__subtitle">
-              {modal.subtitle}
-            </p>
-          )}
-        </header>
-
-        <div className="modal__body">
-          {modal.form === 'contact' ? (
-            <ModalContactForm />
-          ) : (
-            <ModalRealizationForm />
-          )}
-        </div>
+        className={clsx('modal__dialog', className)}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        tabIndex={-1}
+        ref={dialogRef}
+      >
+        <button
+          type="button"
+          className="modal__close"
+          aria-label="Закрыть"
+          onClick={onClose}
+        >
+          ×
+        </button>
+        {title && <h2 className="modal__title">{title}</h2>}
+        {subtitle && <p className="modal__subtitle">{subtitle}</p>}
+        {children}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

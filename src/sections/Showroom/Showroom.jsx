@@ -1,11 +1,14 @@
 import './Showrooms.scss'
+import { useState } from 'react'
 import ShowroomCard from '@/components/ShowroomCard'
 import Button from '@/components/Button'
 import getAsset from '@/utils/getAsset'
+import CallbackModal from '@/components/CallbackModal'
 import showroomsData from '@/data/showroomsData.json'
 
 export default function Showrooms() {
   const { infoBlocks, showroomsLinks, cards } = showroomsData
+  const [isCallbackOpen, setIsCallbackOpen] = useState(false)
 
   return (
     <section className="showrooms">
@@ -82,11 +85,14 @@ export default function Showrooms() {
         <Button
           className="showrooms__btn reveal reveal-delay-3"
           data-js-modal-open="showroom"
+          onClick={() => setIsCallbackOpen(true)}
           data-i18n="showroom-callback"
         >
           заказать обратный звонок
         </Button>
       </div>
+
+      <CallbackModal isOpen={isCallbackOpen} onClose={() => setIsCallbackOpen(false)} />
     </section>
   )
 }

@@ -1,9 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Filters from '@/components/Filters/Filters'
 import ConceptCard from '@/components/ConceptCard'
-import ConceptForm from '@/components/ConceptForm/ConceptForm'
-import conceptsData from '@/data/concepts.json'
+import ConceptDetails from '@/components/ConceptDetails'
+import ConceptForm from '@/components/ConceptForm'
+import Modal from '@/components/Modal'
+import { ACTIONS } from '@/context/conceptsReducer'
+import { useConcepts } from '@/context/ConceptsContext'
+import { useFavorites } from '@/context/FavoritesContext'
+import { useToast } from '@/context/ToastContext'
 import './Grid.scss'
 import './Concept.scss'
 
@@ -16,13 +21,14 @@ const breadcrumbsItems = [
 ]
 
 export default function Concepts() {
-  const [concepts, setConcepts] = useState(conceptsData)
+  const { items, selectedIds, dispatch } = useConcepts()
+  const { isFavorite, toggleFavorite: toggleFav } = useFavorites()
+  const { showToast } = useToast()
   const [activeFilters, setActiveFilters] = useState({})
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT)
   const [resetTrigger, setResetTrigger] = useState(0)
-  const [selectedIds, setSelectedIds] = useState([])
-  const [editingConcept, setEditingConcept] = useState(null)
-  const [isFormOpen, setIsFormOpen] = useState(false)
+  // modal: null | { mode: 'view' | 'edit' | 'create', id?: string }
+  const [modal, setModal] = useState(null)
 
   const handleFilterChange = (filterKey, value) => {
     setActiveFilters((prev) => ({ ...prev, [filterKey]: value }))
@@ -49,9 +55,9 @@ export default function Concepts() {
   const visibleConcepts = filteredConcepts.slice(0, visibleCount)
   const hasMore = visibleCount < filteredConcepts.length
 
-  const allVisibleSelected =
-    visibleConcepts.length > 0 &&
-    visibleConcepts.every((concept) => selectedIds.includes(concept.id))
+  const activeConcept = modal?.id
+    ? items.find((item) => item.id === modal.id)
+    : null
 
   const handleToggleSelect = (id) => {
     setSelectedIds((currentIds) =>
@@ -61,8 +67,18 @@ export default function Concepts() {
     )
   }
 
-  const handleSelectAll = () => {
-    const visibleIds = visibleConcepts.map((concept) => concept.id)
+  const toggleSelect = useCallback(
+    (id) => dispatch({ type: ACTIONS.TOGGLE_SELECT, id }),
+    [dispatch]
+  )
+  const toggleFavorite = useCallback(
+    (id) => {
+      if (!toggleFav(id)) {
+        showToast('Войдите в аккаунт, чтобы добавлять концепты в избранное', 'error')
+      }
+    },
+    [toggleFav, showToast]
+  )
 
     if (allVisibleSelected) {
       setSelectedIds((currentIds) =>
@@ -131,20 +147,28 @@ export default function Concepts() {
         )
       )
     } else {
-      const newConcept = {
-        id: `concept-${Date.now()}`,
-        ...conceptData,
-      }
-
-      setConcepts((currentConcepts) => [newConcept, ...currentConcepts])
+      dispatch({ type: ACTIONS.UPDATE, payload: { ...values, id: modal.id } })
+      showToast('Изменения сохранены', 'success')
+      setModal({ mode: 'view', id: modal.id })
     }
-
-    handleCloseForm()
   }
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + LOAD_MORE_COUNT)
-  }
+  const allVisibleSelected =
+    filteredConcepts.length > 0 &&
+    filteredConcepts.every((c) => selectedIds.includes(c.id))
+
+  const toggleSelectAll = () =>
+    dispatch(
+      allVisibleSelected
+        ? { type: ACTIONS.CLEAR_SELECTION }
+        : { type: ACTIONS.SELECT_MANY, ids: filteredConcepts.map((c) => c.id) }
+    )
+
+  const modalTitle = {
+    create: 'Новый концепт',
+    edit: 'Редактирование концепта',
+    view: activeConcept?.title,
+  }[modal?.mode]
 
   return (
     <section className="concepts" data-js-concepts>
@@ -157,69 +181,52 @@ export default function Concepts() {
           resetTrigger={resetTrigger}
         />
 
-        <div className="concepts__management">
-          <div className="concepts__management-actions">
-            <button
-              type="button"
-              className="concepts__management-button"
-              onClick={handleOpenCreateForm}
-            >
-              Добавить концепт
-            </button>
-
-            <button
-              type="button"
-              className="concepts__management-button"
-              onClick={handleSelectAll}
-              disabled={!visibleConcepts.length}
-            >
-              {allVisibleSelected ? 'Снять выделение' : 'Выбрать все'}
-            </button>
-
-            <button
-              type="button"
-              className="concepts__management-button concepts__management-button--delete"
-              onClick={handleDeleteSelected}
-              disabled={!selectedIds.length}
-            >
-              Удалить выбранные
-              {selectedIds.length ? ` (${selectedIds.length})` : ''}
-            </button>
-          </div>
-
-          {selectedIds.length > 0 && (
-            <span className="concepts__selected-count">
-              Выбрано: {selectedIds.length}
-            </span>
-          )}
+        <div className="concepts__toolbar" role="toolbar" aria-label="Действия">
+          <button
+            type="button"
+            className="concept-btn concept-btn--primary"
+            onClick={() => setModal({ mode: 'create' })}
+          >
+            + Добавить концепт
+          </button>
+          <button
+            type="button"
+            className="concept-btn"
+            onClick={toggleSelectAll}
+            disabled={filteredConcepts.length === 0}
+          >
+            {allVisibleSelected ? 'Снять выбор' : 'Выбрать все'}
+          </button>
+          <button
+            type="button"
+            className="concept-btn concept-btn--danger"
+            onClick={handleDeleteSelected}
+            disabled={selectedIds.length === 0}
+          >
+            Удалить выбранные ({selectedIds.length})
+          </button>
+          <span className="concepts__counter" aria-live="polite">
+            Всего: {items.length} · Показано: {filteredConcepts.length}
+          </span>
+          <span className="concepts__hint">
+            Ctrl/⌘ + клик — выбрать несколько карточек
+          </span>
         </div>
-
-        {isFormOpen && (
-          <ConceptForm
-            concept={editingConcept}
-            defaultImage={conceptsData[0]?.image}
-            onSave={handleSaveConcept}
-            onCancel={handleCloseForm}
-          />
-        )}
 
         <div className="concepts__grid grid-card" data-js-concepts-grid>
           {filteredConcepts.length === 0 ? (
-            <div className="concepts__empty">
-              <p>Концепты не найдены</p>
-              <button type="button" onClick={handleReset}>
-                Сбросить фильтры
-              </button>
-            </div>
+            <p className="concepts__empty">Концепты не найдены</p>
           ) : (
             visibleConcepts.map((concept) => (
               <ConceptCard
                 key={concept.id}
                 card={concept}
                 isSelected={selectedIds.includes(concept.id)}
-                onSelect={handleToggleSelect}
-                onEdit={handleEditConcept}
-                onDelete={handleDeleteConcept}
+                isSelectionMode={selectedIds.length > 0}
+                isFavorite={isFavorite(concept.id)}
+                onOpen={(id) => setModal({ mode: 'view', id })}
+                onToggleSelect={toggleSelect}
+                onToggleFavorite={toggleFavorite}
               />
             ))
           )}
@@ -230,13 +237,44 @@ export default function Concepts() {
             <button
               type="button"
               className="concepts__expandable"
-              onClick={handleLoadMore}
+              onClick={() => setVisibleCount((prev) => prev + LOAD_MORE_COUNT)}
             >
               Показать ещё ({filteredConcepts.length - visibleCount})
             </button>
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={Boolean(modal) && (modal.mode === 'create' || activeConcept)}
+        title={modalTitle}
+        onClose={closeModal}
+      >
+        {modal?.mode === 'view' && activeConcept && (
+          <ConceptDetails
+            concept={activeConcept}
+            isFavorite={isFavorite(activeConcept.id)}
+            onEdit={(c) => setModal({ mode: 'edit', id: c.id })}
+            onDelete={handleDelete}
+            onToggleFavorite={toggleFavorite}
+          />
+        )}
+        {modal?.mode === 'edit' && activeConcept && (
+          <ConceptForm
+            initial={activeConcept}
+            existing={items}
+            onSubmit={handleSubmit}
+            onCancel={() => setModal({ mode: 'view', id: modal.id })}
+          />
+        )}
+        {modal?.mode === 'create' && (
+          <ConceptForm
+            existing={items}
+            onSubmit={handleSubmit}
+            onCancel={closeModal}
+          />
+        )}
+      </Modal>
     </section>
   )
 }
