@@ -1,4 +1,9 @@
 import { useState } from 'react'
+import Autocomplete from '@mui/material/Autocomplete'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
 
 const SELECT_FIELDS = [
   ['category', 'Назначение очага'],
@@ -32,14 +37,14 @@ export default function ConceptForm({ initial, existing, onSubmit, onCancel }) {
   )
   const [error, setError] = useState('')
 
-  const setField = (key) => (e) =>
-    setValues((prev) => ({ ...prev, [key]: e.target.value }))
+  const setValue = (key, value) => setValues((prev) => ({ ...prev, [key]: value ?? '' }))
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     if (!values.title.trim()) {
       setError('Укажите название концепта')
+
       return
     }
 
@@ -54,67 +59,59 @@ export default function ConceptForm({ initial, existing, onSubmit, onCancel }) {
   }
 
   return (
-    <form className="concept-form" onSubmit={handleSubmit} noValidate>
-      <label className="concept-form__field">
-        <span>Название *</span>
-        <input
-          value={values.title}
-          onChange={setField('title')}
-          autoFocus
-          aria-invalid={Boolean(error)}
-        />
-        {error && <small className="concept-form__error">{error}</small>}
-      </label>
+    <Stack component="form" spacing={2} onSubmit={handleSubmit} noValidate sx={{ pt: 1 }}>
+      <TextField
+        label="Название"
+        required
+        value={values.title}
+        onChange={(e) => {
+          setValue('title', e.target.value)
+          setError('')
+        }}
+        error={Boolean(error)}
+        helperText={error}
+      />
 
-      <div className="concept-form__grid">
+      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' } }}>
         {SELECT_FIELDS.map(([key, label]) => (
-          <label className="concept-form__field" key={key}>
-            <span>{label}</span>
-            <input
-              list={`concept-${key}-options`}
-              value={values[key]}
-              onChange={setField(key)}
-            />
-            <datalist id={`concept-${key}-options`}>
-              {unique(existing, key).map((option) => (
-                <option key={option} value={option} />
-              ))}
-            </datalist>
-          </label>
+          <Autocomplete
+            key={key}
+            freeSolo
+            options={unique(existing, key)}
+            inputValue={values[key]}
+            onInputChange={(_, value) => setValue(key, value)}
+            renderInput={(params) => <TextField {...params} label={label} />}
+          />
         ))}
-      </div>
+      </Box>
 
-      <label className="concept-form__field">
-        <span>Изображение (путь или URL)</span>
-        <input
-          value={values.image}
-          onChange={setField('image')}
-          placeholder="/src/assets/images/concepts/concepts-1.png"
-        />
-      </label>
+      <TextField
+        label="Изображение (путь или URL)"
+        value={values.image}
+        onChange={(e) => setValue('image', e.target.value)}
+        placeholder="/src/assets/images/concepts/concepts-1.png"
+      />
+      <TextField
+        label="Особенности (через запятую)"
+        value={values.features}
+        onChange={(e) => setValue('features', e.target.value)}
+      />
+      <TextField
+        label="Описание"
+        multiline
+        minRows={4}
+        value={values.description}
+        onChange={(e) => setValue('description', e.target.value)}
+      />
 
-      <label className="concept-form__field">
-        <span>Особенности (через запятую)</span>
-        <input value={values.features} onChange={setField('features')} />
-      </label>
-
-      <label className="concept-form__field">
-        <span>Описание</span>
-        <textarea
-          rows="4"
-          value={values.description}
-          onChange={setField('description')}
-        />
-      </label>
-
-      <div className="concept-form__actions">
-        <button type="submit" className="concept-btn concept-btn--primary">
+      <Stack direction="row" spacing={1}>
+        <Button type="submit" variant="contained">
           {initial ? 'Сохранить' : 'Добавить'}
-        </button>
-        <button type="button" className="concept-btn" onClick={onCancel}>
+        </Button>
+        <Button variant="outlined" onClick={onCancel}>
           Отмена
-        </button>
-      </div>
-    </form>
+        </Button>
+      </Stack>
+    </Stack>
   )
 }

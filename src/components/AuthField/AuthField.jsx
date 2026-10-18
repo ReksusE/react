@@ -1,100 +1,87 @@
-import './AuthField.scss'
 import { useState } from 'react'
-import clsx from 'clsx'
+import TextField from '@mui/material/TextField'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import LinearProgress from '@mui/material/LinearProgress'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import PhoneInput from '@/components/PhoneInput'
 import { getPasswordStrength } from '@/utils/validators'
 
-const EyeIcon = () => (
-  <svg width="18" height="14" viewBox="0 0 24 18" fill="none" aria-hidden="true">
-    <path d="M12 1C6.5 1 1.5 5 1 9C1.5 13 6.5 17 12 17C17.5 17 22.5 13 23 9C22.5 5 17.5 1 12 1Z" stroke="currentColor" strokeWidth="1.5" />
-    <circle cx="12" cy="9" r="3" stroke="currentColor" strokeWidth="1.5" />
-  </svg>
-)
+const STRENGTH_COLORS = ['inherit', 'error', 'warning', 'info', 'success']
 
 /**
- * Поле формы в стиле auth-field.
+ * Поле формы на базе MUI TextField.
  * type: text | email | password | tel (с маской)
  * withStrength — индикатор надёжности пароля
  */
-export default function AuthField(props) {
-  const {
-    id,
-    label,
-    type = 'text',
-    value,
-    onChange,
-    error,
-    withStrength = false,
-    className,
-    ...rest
-  } = props
-
+export default function AuthField({
+  id,
+  label,
+  type = 'text',
+  value,
+  onChange,
+  error,
+  withStrength = false,
+  className,
+  ...rest
+}) {
   const [isShown, setIsShown] = useState(false)
   const isPassword = type === 'password'
+  const isPhone = type === 'tel'
   const strength = withStrength ? getPasswordStrength(value) : null
-  const common = {
-    id,
-    className: 'auth-field__input',
-    'aria-invalid': Boolean(error),
-    'aria-describedby': error ? `${id}-error` : undefined,
-    ...rest,
-  }
 
-  let control
+  const input = {}
 
-  if (type === 'tel') {
-    control = <PhoneInput value={value} onChange={onChange} {...common} />
-  } else {
-    control = (
-      <input
-        {...common}
-        type={isPassword && isShown ? 'text' : type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
+  if (isPhone) {input.inputComponent = PhoneInput}
+  if (isPassword) {
+    input.endAdornment = (
+      <InputAdornment position="end">
+        <IconButton
+          edge="end"
+          aria-label={isShown ? 'Скрыть пароль' : 'Показать пароль'}
+          aria-pressed={isShown}
+          onClick={() => setIsShown((prev) => !prev)}
+        >
+          {isShown ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+        </IconButton>
+      </InputAdornment>
     )
   }
 
   return (
-    <div className={clsx('auth-field', error && 'has-error', className)}>
-      <label className="auth-field__label" htmlFor={id}>
-        {label}
-      </label>
-
-      {isPassword ? (
-        <div className="auth-field__input-wrap">
-          {control}
-          <button
-            type="button"
-            className="auth-field__toggle"
-            aria-label={isShown ? 'Скрыть пароль' : 'Показать пароль'}
-            aria-pressed={isShown}
-            onClick={() => setIsShown((prev) => !prev)}
-          >
-            <EyeIcon />
-          </button>
-        </div>
-      ) : (
-        control
-      )}
+    <Box className={className} sx={{ mb: 1 }}>
+      <TextField
+        id={id}
+        label={label}
+        type={isPassword && isShown ? 'text' : isPhone ? 'tel' : type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        error={Boolean(error)}
+        helperText={error || ' '}
+        slotProps={{
+          input,
+          inputLabel: { shrink: isPhone || undefined },
+          formHelperText: { role: error ? 'alert' : undefined },
+        }}
+        {...rest}
+      />
 
       {strength && value && (
-        <>
-          <div className="auth-strength" data-level={strength.score}>
-            {[1, 2, 3, 4].map((n) => (
-              <div
-                key={n}
-                className={clsx('auth-strength__bar', n <= strength.score && 'is-active')}
-              />
-            ))}
-          </div>
-          <span className="auth-strength__text">{strength.label}</span>
-        </>
+        <Box sx={{ mt: -0.5 }}>
+          <LinearProgress
+            variant="determinate"
+            value={strength.score * 25}
+            color={STRENGTH_COLORS[strength.score]}
+            aria-label="Надёжность пароля"
+          />
+          <Typography variant="caption" color="text.secondary">
+            {strength.label}
+          </Typography>
+        </Box>
       )}
-
-      <span className="auth-field__error" id={`${id}-error`} role={error ? 'alert' : undefined}>
-        {error}
-      </span>
-    </div>
+    </Box>
   )
 }

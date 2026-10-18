@@ -1,29 +1,43 @@
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import filtersData from '@/data/filters.json'
-import FilterDropdown from './FilterDropdown'
 
-export default function Filters({ onFilterChange, onReset, resetTrigger }) {
+/** Фильтры каталога (MUI Select). Значение фильтра — название выбранной опции. */
+export default function Filters({ values = {}, onFilterChange, onReset }) {
   return (
-    <div className="concepts__filters reveal reveal-delay-1">
-      {filtersData.map((filter) => (
-        <FilterDropdown
-          key={filter.key}
-          filterKey={filter.key}
-          title={filter.title}
-          i18n={filter.i18n}
-          options={filter.options}
-          onFilterChange={onFilterChange}
-          resetTrigger={resetTrigger}
-        />
-      ))}
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
+      {filtersData.map((filter) => {
+        const labelId = `filter-${filter.key}-label`
 
-      <button
-        type="button"
-        className="concepts__filters-reset"
-        data-i18n="filter-btn-6"
-        onClick={onReset}
-      >
+        return (
+          <FormControl key={filter.key} size="small" sx={{ minWidth: 200, flex: '1 1 180px' }}>
+            <InputLabel id={labelId}>{filter.title}</InputLabel>
+            <Select
+              labelId={labelId}
+              label={filter.title}
+              value={values[filter.key] ?? ''}
+              onChange={(e) => onFilterChange(filter.key, e.target.value || null)}
+            >
+              <MenuItem value="">
+                <em>Любое</em>
+              </MenuItem>
+              {filter.options.map((option) => (
+                <MenuItem key={option.value} value={option.title}>
+                  {option.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )
+      })}
+
+      <Button variant="outlined" onClick={onReset}>
         Сбросить
-      </button>
-    </div>
+      </Button>
+    </Box>
   )
 }

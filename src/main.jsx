@@ -8,20 +8,26 @@ import { ToastProvider } from '@/context/ToastContext'
 import { AuthProvider } from '@/context/AuthContext'
 import { ConceptsProvider } from '@/context/ConceptsContext'
 import { FavoritesProvider } from '@/context/FavoritesContext'
+import { RatingsProvider } from '@/context/RatingsContext'
+import MuiProvider from '@/theme/MuiProvider'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <ToastProvider>
-          <AuthProvider>
-            <ConceptsProvider>
-              <FavoritesProvider>
-                <App />
-              </FavoritesProvider>
-            </ConceptsProvider>
-          </AuthProvider>
-        </ToastProvider>
+        <MuiProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <ConceptsProvider>
+                <FavoritesProvider>
+                  <RatingsProvider>
+                    <App />
+                  </RatingsProvider>
+                </FavoritesProvider>
+              </ConceptsProvider>
+            </AuthProvider>
+          </ToastProvider>
+        </MuiProvider>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
