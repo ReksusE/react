@@ -1,6 +1,7 @@
 import './Favorites.scss'
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import Grid from '@mui/material/Grid'
 import ConceptCard from '@/components/ConceptCard'
 import ConceptDetails from '@/components/ConceptDetails'
 import Modal from '@/components/Modal'
@@ -99,17 +100,18 @@ export default function Favorites() {
               </Link>
             </div>
           ) : (
-            <div className="favorites__grid grid-card">
+            <Grid container spacing={3} className="favorites__grid">
               {concepts.map((concept) => (
-                <ConceptCard
-                  key={concept.id}
-                  card={concept}
-                  isFavorite={isFavorite(concept.id)}
-                  onOpen={setOpenedId}
-                  onToggleFavorite={handleToggle}
-                />
+                <Grid key={concept.id} size={{ xs: 6, md: 4, lg: 3 }}>
+                  <ConceptCard
+                    card={concept}
+                    isFavorite={isFavorite(concept.id)}
+                    onOpen={setOpenedId}
+                    onToggleFavorite={handleToggle}
+                  />
+                </Grid>
               ))}
-            </div>
+            </Grid>
           )}
         </div>
       </div>
