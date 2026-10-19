@@ -1,4 +1,13 @@
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Chip from '@mui/material/Chip'
+import Divider from '@mui/material/Divider'
+import Rating from '@mui/material/Rating'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import getAsset from '@/utils/getAsset'
+import { useRatings } from '@/context/RatingsContext'
+import { useToast } from '@/context/ToastContext'
 
 const FIELDS = [
   ['category', 'Назначение'],
@@ -15,70 +24,92 @@ export default function ConceptDetails({
   onDelete,
   onToggleFavorite,
 }) {
+  const { getSummary, getUserRating, rate } = useRatings()
+  const { showToast } = useToast()
+  const { average, count } = getSummary(concept.id)
+
+  const handleRate = (_, value) => {
+    if (!rate(concept.id, value)) {
+      showToast('Войдите в аккаунт, чтобы оценивать концепты', 'error')
+    }
+  }
+
   return (
-    <div className="concept-details">
+    <Box
+      className="concept-details"
+      sx={{ display: 'grid', gap: 3, gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}
+    >
       {concept.image && (
-        <img
-          className="concept-details__image"
+        <Box
+          component="img"
           src={getAsset(concept.image)}
           alt={concept.title}
+          sx={{ width: '100%', aspectRatio: '3 / 4', objectFit: 'cover', borderRadius: 1 }}
         />
       )}
 
-      <div className="concept-details__body">
-        <h3 className="concept-details__title">{concept.title}</h3>
+      <Stack spacing={2}>
+        <Typography variant="h3" component="h3" sx={{ textTransform: 'uppercase' }}>
+          {concept.title}
+        </Typography>
 
-        <dl className="concept-details__list">
+        <Stack spacing={0.5}>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Rating
+              name={`rating-${concept.id}`}
+              value={getUserRating(concept.id)}
+              onChange={handleRate}
+            />
+            <Typography variant="body2" color="text.secondary">
+              {count ? `Средняя: ${average.toFixed(1)} (${count})` : 'Оценок пока нет'}
+            </Typography>
+          </Stack>
+          <Typography variant="caption" color="text.secondary">
+            Ваша оценка
+          </Typography>
+        </Stack>
+
+        <Stack divider={<Divider flexItem />} spacing={1} component="dl" sx={{ m: 0 }}>
           {FIELDS.map(([key, label]) =>
             concept[key] ? (
-              <div className="concept-details__row" key={key}>
-                <dt>{label}</dt>
-                <dd>{concept[key]}</dd>
-              </div>
+              <Stack direction="row" justifyContent="space-between" key={key}>
+                <Typography component="dt" color="text.secondary">
+                  {label}
+                </Typography>
+                <Typography component="dd" sx={{ m: 0, textAlign: 'right' }}>
+                  {concept[key]}
+                </Typography>
+              </Stack>
             ) : null
           )}
-        </dl>
+        </Stack>
 
         {concept.features?.length > 0 && (
-          <ul className="concept-details__tags">
+          <Stack direction="row" useFlexGap flexWrap="wrap" spacing={1}>
             {concept.features.map((feature) => (
-              <li key={feature}>{feature}</li>
+              <Chip key={feature} label={feature} color="primary" />
             ))}
-          </ul>
+          </Stack>
         )}
 
-        {concept.description && (
-          <p className="concept-details__text">{concept.description}</p>
-        )}
+        {concept.description && <Typography>{concept.description}</Typography>}
 
-        <div className="concept-details__actions">
-          <button
-            type="button"
-            className="concept-btn"
-            onClick={() => onToggleFavorite(concept.id)}
-          >
+        <Stack direction="row" useFlexGap flexWrap="wrap" spacing={1}>
+          <Button variant="outlined" onClick={() => onToggleFavorite(concept.id)}>
             {isFavorite ? 'Убрать из избранного' : 'В избранное'}
-          </button>
+          </Button>
           {onEdit && (
-            <button
-              type="button"
-              className="concept-btn"
-              onClick={() => onEdit(concept)}
-            >
+            <Button variant="outlined" onClick={() => onEdit(concept)}>
               Редактировать
-            </button>
+            </Button>
           )}
           {onDelete && (
-            <button
-              type="button"
-              className="concept-btn concept-btn--danger"
-              onClick={() => onDelete(concept)}
-            >
+            <Button variant="outlined" color="error" onClick={() => onDelete(concept)}>
               Удалить
-            </button>
+            </Button>
           )}
-        </div>
-      </div>
-    </div>
+        </Stack>
+      </Stack>
+    </Box>
   )
 }

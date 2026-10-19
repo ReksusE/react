@@ -1,61 +1,53 @@
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import CloseIcon from '@mui/icons-material/Close'
 import './Modal.scss'
-import { useEffect, useRef } from 'react'
-import { createPortal } from 'react-dom'
-import clsx from 'clsx'
 
-export default function Modal({ isOpen, title, subtitle, onClose, className, children }) {
-  const dialogRef = useRef(null)
-  const onCloseRef = useRef(onClose)
-
-  useEffect(() => {
-    onCloseRef.current = onClose
-  }, [onClose])
-
-  useEffect(() => {
-    if (!isOpen) {return}
-
-    const previouslyFocused = document.activeElement
-    const onKeyDown = (e) => e.key === 'Escape' && onCloseRef.current?.()
-
-    document.addEventListener('keydown', onKeyDown)
-    document.documentElement.classList.add('is-lock')
-    dialogRef.current?.focus()
-
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.documentElement.classList.remove('is-lock')
-      previouslyFocused?.focus?.()
-    }
-  }, [isOpen])
-
-  if (!isOpen) {return null}
-
-  return createPortal(
-    <div
-      className="modal"
-      onMouseDown={(e) => e.target === e.currentTarget && onClose()}
+/**
+ * Модальное окно на базе MUI Dialog (фокус-ловушка, Esc, блокировка скролла
+ * и возврат фокуса обеспечивает сама библиотека).
+ */
+export default function Modal({
+  isOpen,
+  title,
+  subtitle,
+  onClose,
+  className,
+  maxWidth = 'md',
+  children,
+}) {
+  return (
+    <Dialog
+      open={Boolean(isOpen)}
+      onClose={onClose}
+      maxWidth={maxWidth}
+      className={className}
+      aria-label={title}
+      scroll="body"
     >
-      <div
-        className={clsx('modal__dialog', className)}
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        tabIndex={-1}
-        ref={dialogRef}
+      <IconButton
+        aria-label="Закрыть"
+        onClick={onClose}
+        sx={{ position: 'absolute', top: 8, right: 8 }}
       >
-        <button
-          type="button"
-          className="modal__close"
-          aria-label="Закрыть"
-          onClick={onClose}
-        >
-          ×
-        </button>
-        {title && <h2 className="modal__title">{title}</h2>}
-        {subtitle && <p className="modal__subtitle">{subtitle}</p>}
-        {children}
-      </div>
-    </div>,
-    document.body
+        <CloseIcon />
+      </IconButton>
+
+      {title && (
+        <DialogTitle sx={{ pr: 7, textTransform: 'uppercase' }}>
+          {title}
+          {subtitle && (
+            <Typography variant="body2" color="text.secondary" component="p">
+              {subtitle}
+            </Typography>
+          )}
+        </DialogTitle>
+      )}
+
+      <DialogContent sx={{ pt: title ? 1 : 3 }}>{children}</DialogContent>
+    </Dialog>
   )
 }
